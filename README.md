@@ -1,70 +1,187 @@
-# Getting Started with Create React App
+# Product Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+The **Product Management System** is a full-stack web application built using React for the frontend and Node.js with Express for the backend. It integrates PostgreSQL as the database and uses JWT for authentication and authorization. The system allows users to register, log in, and view a list of products. Admin users have additional privileges, such as adding, editing, and deleting products. The application also keeps track of all changes made to products, storing a transaction history that logs add, edit, and delete actions.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **User Authentication:** Register and login functionalities with JWT-based authentication
+- **Role-based Authorization:** Admin privileges granted with an admin key to allow secure product management
+- **Product Management:** 
+  - **Admin users** can add, edit, and delete products
+  - **Regular users** can only view products
+- **Transaction History:** Logs every action taken on products, including adding, editing, and deleting, along with timestamps
+- **Responsive UI** built using React
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Table of Contents
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [Installation](#installation)
+- [Usage](#usage)
+- [Environment Variables](#environment-variables)
+- [API Endpoints](#api-endpoints)
+- [File Structure](#file-structure)
+- [Technologies](#technologies)
+- [Future Enhancements](#future-enhancements)
 
-### `npm test`
+## Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/product-management-system.git
+   cd product-management-system
+   ```
 
-### `npm run build`
+2. Navigate to the backend directory and install dependencies:
+   ```bash
+   cd backend
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Set up the environment variables by creating a `.env` file in the backend directory:
+   ```env
+   DB_USER=your_db_user
+   DB_HOST=localhost
+   DB_NAME=your_db_name
+   DB_PASSWORD=your_db_password
+   DB_PORT=your_db_port
+   JWT_SECRET=your_jwt_secret
+   ADMIN_KEY=your_admin_key
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. Create the required PostgreSQL database and tables:
+   ```sql
+   CREATE TABLE users (
+     id SERIAL PRIMARY KEY,
+     email VARCHAR(255) UNIQUE NOT NULL,
+     username VARCHAR(255) NOT NULL,
+     password TEXT NOT NULL,
+     is_admin BOOLEAN DEFAULT FALSE
+   );
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   CREATE TABLE products (
+     id SERIAL PRIMARY KEY,
+     name VARCHAR(255) NOT NULL,
+     description TEXT,
+     price NUMERIC(10, 2) NOT NULL,
+     quantity INTEGER NOT NULL
+   );
 
-### `npm run eject`
+   CREATE TABLE transactions (
+     id SERIAL PRIMARY KEY,
+     product_id INTEGER REFERENCES products(id),
+     name VARCHAR(255),
+     description TEXT,
+     price NUMERIC(10, 2),
+     quantity INTEGER,
+     action VARCHAR(10),
+     timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+   );
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Start the backend server:
+   ```bash
+   npm start
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+6. Set up the frontend:
+   ```bash
+   cd ../src
+   npm install
+   npm start
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Usage
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Register and Login
+- Register by providing an email, username, password, and an optional admin key
+- If you provide the correct admin key during registration, your account will have admin privileges
+- Log in using your registered email and password
 
-## Learn More
+### Managing Products
+- **Admin Users:**
+  - Can add, edit, and delete products
+- **Regular Users:**
+  - Can view the list of products
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Viewing Transaction History
+- Navigate to the Transaction History section to view all product actions with timestamps
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Environment Variables
 
-### Code Splitting
+| Variable | Description |
+|----------|-------------|
+| DB_USER | PostgreSQL database username |
+| DB_HOST | PostgreSQL database host |
+| DB_NAME | PostgreSQL database name |
+| DB_PASSWORD | PostgreSQL database password |
+| DB_PORT | PostgreSQL database port |
+| JWT_SECRET | Secret key for signing JWT tokens |
+| ADMIN_KEY | Special key required for admin privileges |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## API Endpoints
 
-### Analyzing the Bundle Size
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/register` | Register a new user |
+| POST | `/api/login` | Authenticate a user and receive a token |
+| GET | `/api/products` | Get a list of all products |
+| POST | `/api/products` | Add a new product (admin-only) |
+| PUT | `/api/products/:id` | Update an existing product (admin-only) |
+| DELETE | `/api/products/:id` | Delete an existing product (admin-only) |
+| GET | `/api/transactions` | Get the transaction history |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## File Structure
 
-### Making a Progressive Web App
+```
+product-management-system/
+│
+├── backend/
+│   ├── index.js
+│   ├── .env
+│   ├── package.json
+│   └── (other backend-related files)
+│
+└── src/
+    ├── components/
+    │   ├── AddProduct.js
+    │   ├── Login.js
+    │   ├── ProductList.js
+    │   ├── Register.js
+    │   └── TransactionHistory.js
+    │
+    ├── styles/
+    │   ├── AddProduct.css
+    │   ├── ProductList.css
+    │   ├── TransactionHistory.css
+    │   └── Popup.css
+    │
+    ├── App.js
+    ├── App.css
+    ├── package.json
+    └── (other frontend-related files)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Technologies
 
-### Advanced Configuration
+- **Frontend:**
+  - React
+  - Axios
+  - CSS
+- **Backend:**
+  - Node.js
+  - Express.js
+  - JWT for authentication
+- **Database:**
+  - PostgreSQL
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Future Enhancements
 
-### Deployment
+- [ ] Search and Filter: Add search and filter functionality to the product list
+- [ ] User Profiles: Allow users to update their profile information
+- [ ] Product Categories: Add categorization to products for better organization
+- [ ] Notifications: Send email or in-app notifications for product-related actions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
