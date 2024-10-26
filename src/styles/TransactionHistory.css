@@ -1,0 +1,44 @@
+/* Transaction History Table */
+.transaction-history-table {
+    margin-top: 30px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .transaction-history-table th, 
+  .transaction-history-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .transaction-history-table th {
+    background-color: #343a40;
+    color: white;
+  }
+  
+  .transaction-history-table td {
+    background-color: #f9f9f9;
+  }
+  
+  .transaction-history-table .icon {
+    font-size: 1.2rem;
+  }
+  
+  .transaction-history-table .add-icon {
+    color: green;
+  }
+  
+  .transaction-history-table .delete-icon {
+    color: red;
+  }
+  
+  .transaction-history-table .edit-icon {
+    color: orange;
+  }
+  
+  /* Transaction history hover */
+  .transaction-history-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
