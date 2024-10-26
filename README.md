@@ -28,14 +28,14 @@ The **Product Management System** is a full-stack web application built using Re
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/product-management-system.git
-   cd product-management-system
+   git clone https://github.com/ayushku634/GIVA-Assessment.git
+   cd GIVA-Assessment
    ```
 
 2. Navigate to the backend directory and install dependencies:
    ```bash
    cd backend
-   npm install
+   npm i
    ```
 
 3. Set up the environment variables by creating a `.env` file in the backend directory:
@@ -52,42 +52,41 @@ The **Product Management System** is a full-stack web application built using Re
 4. Create the required PostgreSQL database and tables:
    ```sql
    CREATE TABLE users (
-     id SERIAL PRIMARY KEY,
-     email VARCHAR(255) UNIQUE NOT NULL,
-     username VARCHAR(255) NOT NULL,
-     password TEXT NOT NULL,
-     is_admin BOOLEAN DEFAULT FALSE
-   );
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    is_admin INTEGER DEFAULT 0  -- Admin key, stores 6-digit integer if admin
+    );
 
    CREATE TABLE products (
-     id SERIAL PRIMARY KEY,
-     name VARCHAR(255) NOT NULL,
-     description TEXT,
-     price NUMERIC(10, 2) NOT NULL,
-     quantity INTEGER NOT NULL
-   );
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INTEGER NOT NULL
+    );
 
    CREATE TABLE transactions (
-     id SERIAL PRIMARY KEY,
-     product_id INTEGER REFERENCES products(id),
-     name VARCHAR(255),
-     description TEXT,
-     price NUMERIC(10, 2),
-     quantity INTEGER,
-     action VARCHAR(10),
-     timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-   );
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    description TEXT,
+    price DECIMAL(10, 2),
+    quantity INTEGER,
+    action VARCHAR(10),  -- 'add', 'edit', or 'delete'
+    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    );
    ```
 
 5. Start the backend server:
    ```bash
-   npm start
+   node index.js
    ```
 
 6. Set up the frontend:
    ```bash
    cd ../src
-   npm install
+   npm i
    npm start
    ```
 
